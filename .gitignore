@@ -1,0 +1,6 @@
+.DS_Store
+
+/clips
+*.pyc
+*.mp4
+input.txt
