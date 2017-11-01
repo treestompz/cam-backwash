@@ -16,6 +16,7 @@ Via [Homebrew](https://brew.sh/ "Homebrew"):
 ### Usage
 
 Format: `python backwash.py [SPOT_ID] [YEAR-MM-DD]`
+
 Example: `python backwash.py 5157 2017-10-30`
 
 This will start downloading all the cam rewind clips from October 10th, 2017 and then combine them into a single .mp4 file.
