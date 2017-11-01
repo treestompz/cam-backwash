@@ -19,6 +19,6 @@ Format: `python backwash.py [SPOT_ID] [YEAR-MM-DD]`
 
 Example: `python backwash.py 5157 2017-10-30`
 
-This will start downloading all the cam rewind clips from October 10th, 2017 and then combine them into a single .mp4 file.
+This will start downloading all the cam rewind clips from October 30th, 2017 and then combine them into a single .mp4 file.
 
 You can also use **download.py** and **combine.py** indepedently.
