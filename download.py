@@ -56,7 +56,7 @@ def download_cam_rewind(apiUrl):
             
     complete = [pool.apply_async(f, (camera_alias,t, date,)) for t in times]
     for c in complete:
-        print(res.get())
+        print(c.get())
 
 
 if __name__ == "__main__":
