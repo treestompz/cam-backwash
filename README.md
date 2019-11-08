@@ -9,7 +9,7 @@
 
 You need to install [ffmpeg](https://www.ffmpeg.org/ "ffmpeg") on your machine for combining clips.
 
-##### On OSX
+##### On macOS
 Via [Homebrew](https://brew.sh/ "Homebrew"):
 `brew install ffmpeg`
 
