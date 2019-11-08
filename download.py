@@ -6,21 +6,8 @@ import urllib.request
 import multiprocessing as mp
 
 
+# request 403s without a user agent
 HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11'}
-
-
-def build_crf_url(camera, time, date):
-    return f'https://camrewinds.cdn-surfline.com/{camera}/{camera}.{time}.{date}.mp4'
-
-
-def download_file(camera, time, date):
-    url = build_crf_url(camera, time, date)
-    filename = f'{camera}-{time}-{date}.mp4'
-    print('Download %s...' % url)
-    res = urllib.request.urlopen(url)
-    with open('./clips/' + filename, 'wb') as f:
-        f.write(res.read())
-    return filename + ' --> DONE'
 
 
 def download_cam_rewind(apiUrl):
@@ -48,3 +35,17 @@ def download_cam_rewind(apiUrl):
     complete = [pool.apply_async(download_file, (camera_alias, time, date)) for time in times]
     for c in complete:
         print(c.get())
+
+
+def download_file(camera, time, date):
+    url = build_crf_url(camera, time, date)
+    filename = f'{camera}-{time}-{date}.mp4'
+    print('Download %s...' % url)
+    res = urllib.request.urlopen(url)
+    with open('./clips/' + filename, 'wb') as f:
+        f.write(res.read())
+    return filename + ' --> DONE'
+
+
+def build_crf_url(camera, time, date):
+    return f'https://camrewinds.cdn-surfline.com/{camera}/{camera}.{time}.{date}.mp4'
