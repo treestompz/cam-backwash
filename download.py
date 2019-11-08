@@ -1,63 +1,50 @@
 # This file is responsibile for downloading a cam rewind.
 # It can be run on its own, but is also utilized in backwash.py.
-import os, urllib2, json
+import os
+import json
+import urllib.request
 import multiprocessing as mp
 
-def main():
-    download_cam_rewind("http://www.surfline.com/surfdata/video-rewind/video_rewind_json.cfm?id=5157&context=2017-10-30")
+
+HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11'}
 
 
 def build_crf_url(camera, time, date):
-    return "https://camrewinds.cdn-surfline.com/" + camera + "/" + camera + "." + str(time) + "." + date + ".mp4"
-    
-
-def download_file(url, filename):
-    res = urllib2.urlopen(url)
-    with open("./clips/" + filename, 'wb') as f:
-        f.write(res.read())
+    return f'https://camrewinds.cdn-surfline.com/{camera}/{camera}.{time}.{date}.mp4'
 
 
-def f(camera, time, date):
+def download_file(camera, time, date):
     url = build_crf_url(camera, time, date)
-    filename = camera + "-" + time + "-" + date + ".mp4"
-    print("Downloading " + url + "...")
-    download_file(url, filename)
-    return filename + " --> DONE"
+    filename = f'{camera}-{time}-{date}.mp4'
+    print('Download %s...' % url)
+    res = urllib.request.urlopen(url)
+    with open('./clips/' + filename, 'wb') as f:
+        f.write(res.read())
+    return filename + ' --> DONE'
 
 
 def download_cam_rewind(apiUrl):
-    print("\n!!!!!!!!!!!!")
-    print("You may want to clear out your /clips/ folder before downloading.")
-    print("!!!!!!!!!!!!\n")
+    print('!!! You may want to clear out your clips/ folder before downloading.')
+    if not os.path.exists('clips/'):
+        print('Creating /clips/ directory...\n')
+        os.makedirs('clips')
 
-    # Make sure /clips/ exists
-    if not os.path.exists("clips/"):
-        print("Creating /clips/ directory...\n")
-        os.makedirs("clips")
-
-    print("Starting download... CTRL+C to stop.\n")
-
-    res = urllib2.urlopen(apiUrl)
+    print('Starting download... CTRL+C to stop.\n')
+    request = urllib.request.Request(apiUrl, None, HEADERS)
+    res = urllib.request.urlopen(request)
     data = json.load(res)
-
     video_times = data['video_times']
     camera_alias = str(data['camera_alias'])
     date = str(data['context_aware'])
 
-    pool = mp.Pool(processes=mp.cpu_count())
     times = []
-
-    for i in range(0, len(video_times)):
-        time = str(int(video_times[i]))
-        # make '700' -> '0700'
-        if(len(time) == 3):
-            time = "0" + time
+    for video_time in video_times:
+        time = str(int(video_time))
+        if len(time) == 3:
+            time = '0' + time # '700' -> '0700'
         times.append(time)
-            
-    complete = [pool.apply_async(f, (camera_alias,t, date,)) for t in times]
+
+    pool = mp.Pool(processes=mp.cpu_count())
+    complete = [pool.apply_async(download_file, (camera_alias, time, date)) for time in times]
     for c in complete:
         print(c.get())
-
-
-if __name__ == "__main__":
-    main()

@@ -1,6 +1,6 @@
 .DS_Store
-
-/clips
+venv
+clips
 *.pyc
 *.mp4
 input.txt

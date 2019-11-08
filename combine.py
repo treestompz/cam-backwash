@@ -4,38 +4,25 @@ import os
 from subprocess import call
 
 
-def main():
-    combine()
-
-
 def combine():
     # Delete old input.txt file
-    if os.path.exists("input.txt"):
-        os.remove("input.txt")
-
-    print("Creating input.txt file...")
-
-    clipFiles = os.listdir("./clips")
-    counter = 0
+    if os.path.exists('input.txt'):
+        os.remove('input.txt')
 
     # Create an input.txt file ffmpeg with each file listed as:
     # file '/clips/input1.mp4'
+    print('Creating input.txt file...')
+    with open('input.txt', 'a') as inputFile:
+        # the 4 digit timestamps on the files will sort just fine
+        for file in sorted(os.listdir('./clips')):
+            if file.endswith('.mp4'):
+                inputFile.write('file \'./clips/' + file + '\'\n')
+                print('- Added' + file)
 
-    with open("input.txt", "a") as inputFile:
-        for file in os.listdir("./clips"):
-            if(file.endswith(".mp4")):
-                counter += 1
-                inputFile.write("file \'./clips/" + file + "\'\n")
-                print("- Added" + file)
-
-    print("Combining all clips...")
-
-    # use the concat demuxer
-    # ffmpeg -f concat -i input.txt -codec copy output.mp4
-    call(["ffmpeg", "-f", "concat", "-safe", "0", "-i", "input.txt", "-codec", "copy", "combined.mp4"])
-
-    print("\nFinished.")
+    print('Combining all clips...')
+    call(['ffmpeg', '-f', 'concat', '-safe', '0', '-i', 'input.txt', '-codec', 'copy', 'combined.mp4'])
+    print('\nFinished.')
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    combine()
