@@ -1,7 +1,7 @@
 **NOTE: Please do not abuse this if you are not a [Surfline.com](http://surfline.com "Surfline.com") premium member!**
 
 # cam-backwash
-####  Conveniently download surfing cam rewinds for your viewing pleasure!
+####  Conveniently download surfing cam rewinds!
 
 ## How to
 
